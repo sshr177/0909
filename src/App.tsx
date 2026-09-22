@@ -1,7 +1,7 @@
 // src/App.tsx 
 import styled from 'styled-components';
-import PostItem from './components/PostItem';
-import type { Post } from './types';
+import PostList from './components/PostList';
+import type { NewPost, Post, PostListState } from './types';
 import Button from './components/Button';
 import React, { useState } from 'react';
 import type { ChangeEvent } from 'react';
@@ -24,10 +24,27 @@ const Title = styled.h1`
 `;
 
 function App() {
-
+  const [posts, setPosts] = useState<Post[]>(DUMMY);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [author, setAuthor] = useState('');
   const [commentInput, setCommentInput] = useState('');
+
+  const handleAddPost = () => {
+    const newPost: NewPost = {
+      title: title.trim(),
+      content: content.trim(),
+      author: author.trim(),
+    };
+
+    if (!newPost.title || !newPost.content || !newPost.author) return;
+
+    setPosts((previousPosts) => [...previousPosts, { ...newPost, id: Date.now() }]);
+    setTitle('');
+    setContent('');
+    setAuthor('');
+  };
 
   const handleContentChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -38,17 +55,29 @@ function App() {
     setCommentInput(e.target.value);
   }
 
+  const postListState: PostListState = posts.length > 0
+    ? { status: 'success', data: posts }
+    : { status: 'empty' };
+
   return (
     <>
       <Title>🐘 TS 미니 게시판</Title>
       <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력하세요" />
-      <p>입력 중: {title}</p>
-      <textarea value={content} onChange={handleContentChange} />
-      <p>textarea 입력 중인 내용 : {content} </p>
-      <Button label="확인" onClick={() => alert("버튼 클릭테스트!")} />
-      {DUMMY.map((post) => (
-        <PostItem key={post.id} post={post} />
-      ))}
+      <textarea value={content} onChange={handleContentChange} placeholder="내용을 입력하세요" />
+      <input value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="작성자를 입력하세요" />
+      <Button label="추가" onClick={handleAddPost} />
+      <PostList state={postListState} onSelect={setSelectedPost} />
+
+      {selectedPost === null ? (
+        <p>게시글을 선택해주세요.</p>
+      ) : (
+        <section>
+          <p>#{selectedPost.id}</p>
+          <h2>{selectedPost.title}</h2>
+          <p>{selectedPost.content}</p>
+          <p>by {selectedPost.author}</p>
+        </section>
+      )}
 
       <div>
         <h2>댓글</h2>

@@ -1,17 +1,20 @@
 // PostItem.tsx — 최종본
 import styled from 'styled-components';
 import type { Post } from '../types';
+import Button from './Button';
 
 interface PostItemProps {
   post: Post;
+  onSelect: (post: Post) => void;
 }
 
-function PostItem({ post }: PostItemProps) {
+function PostItem({ post, onSelect }: PostItemProps) {
   return (
     <Card>
       <Title>{post.title}</Title>
       <Content>{post.content}</Content>
       <Author>by {post.author}</Author>
+      <Button label="선택" onClick={() => onSelect(post)} />
     </Card>
   );
 }

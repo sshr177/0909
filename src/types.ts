@@ -11,3 +11,11 @@ export interface Comment{
   content: string;
   createdAt: string;
 }
+
+export type NewPost = Omit<Post, 'id'>;
+
+export type PostListState =
+  | { status: 'loading' }
+  | { status: 'success'; data: Post[] }
+  | { status: 'error'; message: string }
+  | { status: 'empty' };
