@@ -1,5 +1,10 @@
 # React + TypeScript + Vite
 
+## 게시글 목록 상태
+
+`success`는 게시글 목록을 담는 상태이고, `empty`는 게시글이 없다는 사실을 명시하는 상태입니다!!! 
+하지만 `success`의 `data`가 `Post[]`이므로 `{ status: 'success', data: [] }`도 타입 오류 없이 만들 수 있기때문에, 이 설계가 불가능한 상태를 완전히 없애지는 못합니다..
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
